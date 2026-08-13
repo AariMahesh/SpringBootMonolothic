@@ -1,5 +1,7 @@
 package com.myproject.mono.controller;
 
+import com.myproject.mono.dto.UserRequest;
+import com.myproject.mono.dto.UserResponse;
 import com.myproject.mono.model.User;
 import com.myproject.mono.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -18,27 +20,27 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers()
+    public ResponseEntity<List<UserResponse>> getAllUsers()
     {
         return new ResponseEntity<>(userService.fetchAllUsers(), HttpStatus.OK);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable(value = "id")Integer id)
+    public ResponseEntity<UserResponse> getUser(@PathVariable(value = "id")Integer id)
     {
         return userService.fetchUser(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody User user)
+    public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest)
     {
-        userService.addUser(user);
+        userService.addUser(userRequest);
         return new ResponseEntity<>("User created Successfully",HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable(value = "id")Integer id,@RequestBody User userToUpdate)
+    public ResponseEntity<String> updateUser(@PathVariable(value = "id")Integer id,@RequestBody UserRequest userRequestToUpdate)
     {
-        boolean updatedStatus = userService.updateUser(id, userToUpdate);
+        boolean updatedStatus = userService.updateUser(id, userRequestToUpdate);
         if(updatedStatus)
         {
             return new ResponseEntity<>("User Updated Successfully",HttpStatus.OK);
