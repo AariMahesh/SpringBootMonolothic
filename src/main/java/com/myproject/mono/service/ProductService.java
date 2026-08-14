@@ -30,8 +30,8 @@ public class ProductService {
     }
     public ProductResponse createProduct(ProductRequest productRequest) {
         Product product = new Product();
-        mapToEntity(productRequest,product);
-        Product savedProduct = productRepository.save(product);
+
+        Product savedProduct = productRepository.save(mapToEntity(productRequest,product));
         return mapToResponse(savedProduct);
 
     }
@@ -50,7 +50,7 @@ public class ProductService {
         });
         return false;
     }
-    private void mapToEntity(ProductRequest productRequest, Product product)
+    private Product mapToEntity(ProductRequest productRequest, Product product)
     {
         product.setName(productRequest.getName());
         product.setDescription(productRequest.getDescription());
@@ -58,6 +58,7 @@ public class ProductService {
         product.setImageUrl(productRequest.getImageUrl());
         product.setCategory(productRequest.getCategory());
         product.setPrice(productRequest.getPrice());
+        return product;
     }
     private ProductResponse mapToResponse(Product savedProduct)
     {

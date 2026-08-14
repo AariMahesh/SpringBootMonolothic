@@ -7,6 +7,7 @@ import com.myproject.mono.model.User;
 import com.myproject.mono.repository.CartItemRepository;
 import com.myproject.mono.repository.ProductRepository;
 import com.myproject.mono.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CartService {
 
     private final ProductRepository productRepository;
@@ -74,5 +76,9 @@ public class CartService {
     public List<CartItem> getCartItems(String userId) {
         return userRepository.findById(Integer.valueOf(userId)).map(cartItemRepository::findByUser)
                 .orElse(List.of());
+    }
+
+    public void clearCart(String userId) {
+        userRepository.findById(Integer.valueOf(userId)).ifPresent(cartItemRepository::deleteByUser);
     }
 }
